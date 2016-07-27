@@ -1,5 +1,6 @@
 function chart() {
 
+  // Default values
   var vars = {
     width: 400,
     height: 100,
@@ -35,13 +36,13 @@ function chart() {
       vars.svg = d3.select(this);
 
       d3.select(this).selectAll(".title").data([vars.data])
-      .enter()
-        .append("text")
-        .attr("class", "title")
-        .attr("transform", "translate(" + vars.width / 2 + ", " + vars.margin.top / 2  + ")")
-        .attr('text-anchor', 'middle')
-        .attr('dominant-baseline', 'central')
-        .text(vars.title);
+        .enter()
+          .append("text")
+          .attr("class", "title")
+          .attr("transform", "translate(" + vars.width / 2 + ", " + vars.margin.top / 2  + ")")
+          .attr('text-anchor', 'middle')
+          .attr('dominant-baseline', 'central')
+          .text(vars.title);
 
       d3.select(this).selectAll(".inner").data([vars.data])
         .enter()
@@ -53,10 +54,10 @@ function chart() {
 
       d3.select(this).selectAll(".outer").data([vars.data])
         .enter()
-        .append("rect")
-        .attr("class", "outer")
-        .attr("width", vars.width)
-        .attr("height", vars.height);
+          .append("rect")
+          .attr("class", "outer")
+          .attr("width", vars.width)
+          .attr("height", vars.height);
 
       d3.select(this).selectAll('.dotsCircle').data(vars.data, function(d) { return d[vars.var_id]; })
         .enter()
@@ -82,6 +83,7 @@ function chart() {
     });
   }
 
+  // Private functions
   function merge(d, e) {
 
     var obj = {},
@@ -99,6 +101,7 @@ function chart() {
     return obj;
   };
 
+  // Public functions
   chart.filter = function() {
     vars.renderDirty = true;
     return chart;
