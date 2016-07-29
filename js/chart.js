@@ -33,12 +33,16 @@ function chart() {
 
       var gEnter = d3.select(this).selectAll("g").data([vars.data]).enter();
 
-      vars.svg = d3.select(this);
+      vars.svg = d3.select(this)
+          .transition()
+          .attr('transform', function(d) { return 'translate(' + vars.translate + ')'; })
 
       d3.select(this).selectAll(".title").data([vars.data])
         .enter()
           .append("text")
-          .attr("class", "title")
+          .attr("class", "title");
+
+      d3.select(this).selectAll(".title").data([vars.data])
           .attr("transform", "translate(" + vars.width / 2 + ", " + vars.margin.top / 2  + ")")
           .attr('text-anchor', 'middle')
           .attr('dominant-baseline', 'central')
@@ -47,7 +51,9 @@ function chart() {
       d3.select(this).selectAll(".inner").data([vars.data])
         .enter()
           .append("rect")
-          .attr("class", "inner")
+          .attr("class", "inner");
+
+      d3.select(this).selectAll(".inner").data([vars.data])
           .attr("width", vars.width - vars.margin.left - vars.margin.right)
           .attr("height", vars.height - vars.margin.top - vars.margin.bottom)
           .attr("transform", "translate(" + vars.margin.left + "," + vars.margin.top + ")");
@@ -55,7 +61,9 @@ function chart() {
       d3.select(this).selectAll(".outer").data([vars.data])
         .enter()
           .append("rect")
-          .attr("class", "outer")
+          .attr("class", "outer");
+
+      d3.select(this).selectAll(".outer").data([vars.data])
           .attr("width", vars.width)
           .attr("height", vars.height);
 
@@ -63,9 +71,6 @@ function chart() {
         .enter()
           .append('circle')
           .attr('class', 'dotsCircle')
-          .attr('r', 10)
-          .attr('cx', function(d) { return vars.xScale(d[vars.var_x]); })
-          .attr('cy', function(d) { return vars.yScale(d[vars.var_y]); })
           .on('click', function(d) {
             vars.dispatch.call("click", this, d);
           })
@@ -75,6 +80,11 @@ function chart() {
           .on("mouseout", function(d) {
             vars.dispatch.call("hover", this, d);
           });
+
+      d3.select(this).selectAll('.dotsCircle').data(vars.data, function(d) { return d[vars.var_id]; })
+          .attr('r', 10)
+          .attr('cx', function(d) { return vars.xScale(d[vars.var_x]); })
+          .attr('cy', function(d) { return vars.yScale(d[vars.var_y]); });
 
       if (vars.renderDirty) {
         vars.renderDirty = false;
