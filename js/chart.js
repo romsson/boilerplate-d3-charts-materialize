@@ -43,6 +43,7 @@ function chart() {
           .attr("class", "title");
 
       d3.select(this).selectAll(".title").data([vars.data])
+          .transition()
           .attr("transform", "translate(" + vars.width / 2 + ", " + vars.margin.top / 2  + ")")
           .attr('text-anchor', 'middle')
           .attr('dominant-baseline', 'central')
@@ -54,6 +55,7 @@ function chart() {
           .attr("class", "inner");
 
       d3.select(this).selectAll(".inner").data([vars.data])
+          .transition()
           .attr("width", vars.width - vars.margin.left - vars.margin.right)
           .attr("height", vars.height - vars.margin.top - vars.margin.bottom)
           .attr("transform", "translate(" + vars.margin.left + "," + vars.margin.top + ")");
@@ -64,6 +66,7 @@ function chart() {
           .attr("class", "outer");
 
       d3.select(this).selectAll(".outer").data([vars.data])
+          .transition()
           .attr("width", vars.width)
           .attr("height", vars.height);
 
@@ -82,6 +85,7 @@ function chart() {
           });
 
       d3.select(this).selectAll('.dotsCircle').data(vars.data, function(d) { return d[vars.var_id]; })
+          .transition()
           .attr('r', 10)
           .attr('cx', function(d) { return vars.xScale(d[vars.var_x]); })
           .attr('cy', function(d) { return vars.yScale(d[vars.var_y]); });
