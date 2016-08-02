@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <meta charset="UTF-8">
+  <title>d3 charts boilerplate materialize CSS</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="node_modules/materialize-css/bin/materialize.css" rel="stylesheet" type="text/css" media="screen"/>
+  <link href="css/chart.css" rel="stylesheet" type="text/css" />
+  <link href="css/materialize.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+  <nav class="white" role="navigation">
+    <div class="nav-wrapper container">
+      <a id="logo-container" href="#" class="brand-logo">Charts</a>
+      <ul class="right hide-on-med-and-down">
+        <li><a href="#">About</a></li>
+      </ul>
+
+      <ul id="nav-mobile" class="side-nav">1
+        <li><a href="#">Navbar Link</a></li>
+      </ul>
+      <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+    </div>
+  </nav>
+
+  <div id="index-banner" class="parallax-container">
+    <div class="section no-pad-bot">
+      <div class="container" id="viz"></div>
+    </div>
+  </div>
+  <script src="node_modules/d3/build/d3.js"></script>
+  <script src="js/chart.js"></script>
+  <script src="node_modules/d3-gridding/build/d3-gridding.js"></script>
+  <script>
+
+  var data = [
+    {id: 0, x : 20, y : 30, label : 'item 0'},
+    {id: 1, x : 100, y: 190, label : 'item 1'},
+    {id: 2, x : 300, y: 100, label : 'item 2'},
+    {id: 3, x : 300, y: 100, label : 'item 3'},
+    {id: 4, x : 30, y: 90, label : 'item 4'}
+  ];
+
+  var margin = {top: 30, right: 20, bottom: 30, left: 50},
+    width = 600 - margin.left - margin.right,
+    height = 600 - margin.top - margin.bottom;
+
+  var svg = d3.select("#viz")
+    .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+  var gridding = d3.gridding()
+    .size([width, height])
+    .mode("horizontal");
+
+  var params = [{
+          "data": data,
+          "var_id": "id",
+          "var_x": "x",
+          "var_y": "y",
+          "title": "my 1st chart"
+      }, {
+          "data": data,
+          "var_x": "y",
+          "var_y": "x",
+          "title": "my 2nd chart"
+      }, {
+          "data": data,
+          "var_x": "x",
+          "var_y": "y",
+          "title": "my 3rd chart"
+      }, {
+          "data": data,
+          "var_x": "x",
+          "var_y": "y",
+          "title": "my 4th chart"
+      }, {
+          "data": data,
+          "var_x": "x",
+          "var_y": "y",
+          "title": "my 5th chart"
+      }];
+
+  var grid = gridding(params);
+
+  params.forEach(function(d, i) {
+    d.translate = [grid[i].x, grid[i].y];
+  })
+
+  var charts = params.map(function(p) {
+    return chart().params(p);
+  });
+
+  var chart = svg.selectAll('charts').data(charts)
+    .enter()
+      .append('g')
+      .each(function(c, i) {
+        c.on("click", renderAll);
+        c.on("hover", function(d) {
+
+          chart.each(function(e) {
+            e.highlight(d);
+          });
+
+        });
+      });
+
+  function render(method) {
+    d3.select(this).call(method);
+  }
+
+  function renderAll() {
+    chart.each(render);
+  }
+
+  renderAll();
+
+  setInterval(function(d) {
+    var modes = gridding.modes(),
+        mode = gridding.mode();
+
+    gridding.mode(modes[(modes.indexOf(mode) + 1) % modes.length]);
+
+    grid = gridding(params);
+
+    params.forEach(function(p, i) {
+      p.translate = [grid[i].x, grid[i].y];
+    })
+
+    charts.forEach(function(c, i) {
+      c.params(params[i])
+    });
+
+    renderAll();
+
+    console.log(mode)
+
+  }, 1000);
+
+  </script>
+</body>
+</html>

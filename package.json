@@ -12,6 +12,7 @@
   "author": "Romain Vuillemot",
   "dependencies": {
     "d3": "^4.1.1",
+    "d3-gridding": "0.0.3",
     "materialize-css": "^0.97.7"
   }
 }
